@@ -1,20 +1,35 @@
 <script>
-	let destinations = [
-		{ position: 1, value: 1 },
-		{ position: 2, value: 2 },
-		{ position: 3, value: 3 },
-		{ position: 4, value: 4 },
-	]
+	import dragula from 'dragula';
+	import '../node_modules/dragula/dist/dragula.min.css';
+	import { onMount } from 'svelte';
+	onMount(() => {
+		dragula([
+			document.getElementById('dest-0'),
+			document.getElementById('dest-1'),
+			document.getElementById('dest-2'),
+			document.getElementById('dest-3'),
+			document.getElementById('outcomes')
+		], {
+			revertOnSpill: true,
+		}).on('drop', (el, target) => {
+			const dest = target.getAttribute('id');
+			const outcome = el.getAttribute('id')
+			setOutcome(outcome, dest.slice(-1))
+		})
+	})
 
 	const OUTCOMES = [
-		'School',
-		'Town',
-		'CBD',
-		'Airport'
+		{id:'School',position:0, value: 'School'},
+		{id:'Town',position:0, value: 'Town'},
+		{id:'CBD',position:0, value: 'CBD'},
+		{id:'Airport',position:0, value: 'Airport'},
 	]
 
 	const rotate = (direction, degrees) => () => {
-		let currValues = destinations.map(x => x.value)
+		let currValues = ['','','','']
+		OUTCOMES.forEach(x => {
+			currValues[x.position] = x.value
+		})
 		let numRotations = Math.floor(degrees/90);
 		if (direction === 1) { // clockwise
 			for (let i = 0; i < numRotations; i+= 1) {
@@ -27,54 +42,40 @@
 				currValues.push(popped)
 			}
 		}
-		for (let i = 0; i < destinations.length; i+= 1) {
-			destinations[i].value = currValues[i]
+		for (let i=0; i<OUTCOMES.length; i+=1) {
+			OUTCOMES[i].value = currValues[OUTCOMES[i].position]
 		}
 	}
 
-	const setOutcome = () => {
-
-	}
-
-	const handleDragStart = (event) => {
-		console.log('hi')
-		event
-			.currentTarget
-			.style
-			.backgroundColor = 'yellow';
-	}
-
-	const handleDrop = (event) => {
-		const id = event.dataTransfer.getData('text');
-		console.log(event)
-	console.log('dest', event.srcElement.id)
+	const setOutcome = (outcome, destIndex) => {
+		OUTCOMES.forEach(x => {
+			if (x.id === outcome) {
+				x.position = parseInt(destIndex)
+			}
+		})
 	}
 </script>
 
 <main>
 	<h1>Offtrack Map!</h1>
-	<div class="map">
-		{#each destinations as dest}
-			<div
-				id={`dest-${dest.position}`}
-				class="destination"
-				on:dragover={(event) => event.preventDefault()}
-				on:drop={handleDrop}
-			>
-				{dest.value}
-			</div>
-		{/each}
+	<div class="map" id="map">
+		<div id="dest-0" class="destination"></div>
+		<div id="dest-1" class="destination"></div>
+		<div id="dest-2" class="destination"></div>
+		<div id="dest-3" class="destination"></div>
 	</div>
 
 	<button on:click={rotate(1, 90)}>Rotate Clockwise 90 degrees</button>
 	<button on:click={rotate(-1, 90)}>Rotate Anti-Clockwise 90 degrees</button>
 	<button on:click={rotate(1, 180)}>Rotate 180 degrees</button>
 
-	{#each OUTCOMES as outcome}
-		<div class="destination outcomes" id={outcome} draggable={true} on:dragstart={handleDragStart}>
-			{outcome}
-		</div>
-	{/each}
+	<div id="outcomes">
+		{#each OUTCOMES as outcome}
+			<div class="destination outcomes" id={outcome.id}>
+				{outcome.value}
+			</div>
+		{/each}
+	</div>
 </main>
 
 <style>
@@ -94,7 +95,6 @@
 	
 	.map {
 		display: grid;
-		/* grid-gap: 1rem; */
 		grid-template-columns: repeat(3, 50px);
 		grid-template-rows: repeat(3, 50px);
 	}
@@ -106,30 +106,32 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		z-index: 99;
 	}
 	.outcomes {
 		background: turquoise;
+		z-index: 1;
 	}
 
-	#dest-1 {
+	#dest-0 {
 		grid-column-start: 2;
 		grid-column-end: 3;
 		grid-row-start: 1;
 		grid-row-end: 2;
 	}
-	#dest-4 {
+	#dest-3 {
 		grid-column-start: 1;
 		grid-column-end: 2;
 		grid-row-start: 2;
 		grid-row-end: 3;
 	}
-	#dest-3 {
+	#dest-2 {
 		grid-column-start: 2;
 		grid-column-end: 3;
 		grid-row-start: 3;
 		grid-row-end: 4;
 	}
-	#dest-2 {
+	#dest-1 {
 		grid-column-start: 3;
 		grid-column-end: 4;
 		grid-row-start: 2;
