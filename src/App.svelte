@@ -19,10 +19,10 @@
 	})
 
 	const OUTCOMES = [
-		{id:'School',position:0, value: 'School'},
-		{id:'Town',position:0, value: 'Town'},
-		{id:'CBD',position:0, value: 'CBD'},
-		{id:'Airport',position:0, value: 'Airport'},
+		{ id: 'School', position:0, value: 'School' },
+		{ id: 'Town', position:0, value: 'Town' },
+		{ id: 'CBD', position:0, value: 'CBD' },
+		{ id: 'Airport', position:0, value: 'Airport'},    
 	]
 
 	const rotate = (direction, degrees) => () => {
@@ -57,7 +57,6 @@
 </script>
 
 <main>
-	<h1>Offtrack Map!</h1>
 	<div class="map" id="map">
 		<div id="dest-0" class="destination"></div>
 		<div id="dest-1" class="destination"></div>
@@ -65,52 +64,90 @@
 		<div id="dest-3" class="destination"></div>
 	</div>
 
-	<button on:click={rotate(1, 90)}>Rotate Clockwise 90 degrees</button>
-	<button on:click={rotate(-1, 90)}>Rotate Anti-Clockwise 90 degrees</button>
-	<button on:click={rotate(1, 180)}>Rotate 180 degrees</button>
+	<div class="buttonArea">
+		<img src="offtrack.png" alt="logo" width="90" />
+		<button on:click={rotate(1, 90)}>Rotate Clockwise 90 degrees</button>
+		<button on:click={rotate(-1, 90)}>Rotate Anti-Clockwise 90 degrees</button>
+		<button on:click={rotate(1, 180)}>Rotate 180 degrees</button>
+	</div>
 
-	<div id="outcomes">
+	<div class="targetArea" id="outcomes">
 		{#each OUTCOMES as outcome}
-			<div class="destination outcomes" id={outcome.id}>
+			<div class="outcomes" id={outcome.id}>
 				{outcome.value}
 			</div>
 		{/each}
 	</div>
+
+	<div class="footer">
+		You
+	</div>
 </main>
 
 <style>
+	:root {
+		--square-width: 100px;
+	}
 	main {
+		background-color: #1A947E;
+		height: 100vh;
 		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-	
-	.map {
 		display: grid;
-		grid-template-columns: repeat(3, 50px);
-		grid-template-rows: repeat(3, 50px);
+		grid-template-columns: 2fr 3fr 2fr;
+		grid-template-rows: 6fr 1fr;
+		grid-template-areas: "actionArea mapArea targetArea"
+												"footer footer footer";
 	}
 
+	.footer {
+		grid-area: footer;
+		background-color: #FFC806;
+		padding: 10px;
+	}
+	.buttonArea {
+		grid-area: actionArea;
+		align-self: center;
+		padding: 15px;
+	}
+	button {
+		border-radius: 20px;
+		width: 100%;
+		padding: 5px 15px;
+	}
+
+	.map {
+		grid-area: mapArea;
+		display: grid;
+		align-self: center;
+		justify-self: center;
+		grid-template-columns: repeat(3, var(--square-width));
+		grid-template-rows: repeat(3, var(--square-width));
+		grid-gap: 2px;
+	}
+	.targetArea {
+		grid-area: targetArea;
+		align-self: center;
+		justify-self: center;
+		display: grid;
+		grid-gap: 10px;
+		grid-template-rows: repeat(2, var(--square-width));
+		grid-template-columns: repeat(2, var(--square-width));
+	}
 	.destination {
-		width: 50px;
-		height: 50px;
-		background: red;
+		width: var(--square-width);
+		height: var(--square-width);
+		border: 2px white dashed;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		z-index: 99;
 	}
 	.outcomes {
-		background: turquoise;
-		z-index: 1;
+		width: calc(var(--square-width) - 4px);
+		height: calc(var(--square-width) - 4px);
+		background: #00C6E0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	#dest-0 {
@@ -138,9 +175,9 @@
 		grid-row-end: 3;
 	}
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
+	@media (max-width: 900px) {
+		:root {
+			--square-width: 80px;
 		}
 	}
 </style>

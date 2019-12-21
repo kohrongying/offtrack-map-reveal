@@ -13,7 +13,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'docs/build/bundle.js'
 	},
 	plugins: [
 		svelte({
@@ -22,10 +22,10 @@ export default {
 			// we'll extract any component CSS out into
 			// a separate file — better for performance
 			css: css => {
-				css.write('public/build/bundle.css');
+				css.write('docs/build/bundle.css');
 			}
 		}),
-		css({ output: 'public/dragula.min.css' }),
+		css({ output: 'docs/dragula.min.css' }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
