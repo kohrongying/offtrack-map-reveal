@@ -184,14 +184,14 @@
 
 	@media screen and (orientation: portrait) {
 		main#landscape {
-			transform: rotate(-90deg);
-			transform-origin: left top;
+			transform: rotate(90deg);
+			transform-origin: right top;
 			width: 100vh;
 			height: 100vw;
 			overflow-x: hidden;
 			position: absolute;
 			top: 100%;
-			left: 0; 
+			right: 0; 
 		}
 	}
 </style>
