@@ -56,7 +56,7 @@
 	}
 </script>
 
-<main>
+<main id="landscape">
 	<div class="map" id="map">
 		<div id="dest-0" class="destination"></div>
 		<div id="dest-1" class="destination"></div>
@@ -87,9 +87,10 @@
 <style>
 	:root {
 		--square-width: 100px;
+		--bg-color: #1A947E
 	}
-	main {
-		background-color: #1A947E;
+	main#landscape {
+		background-color: var(--bg-color);
 		height: 100vh;
 		text-align: center;
 		display: grid;
@@ -178,6 +179,19 @@
 	@media (max-width: 900px) {
 		:root {
 			--square-width: 80px;
+		}
+	}
+
+	@media screen and (orientation: portrait) {
+		main#landscape {
+			transform: rotate(-90deg);
+			transform-origin: left top;
+			width: 100vh;
+			height: 100vw;
+			overflow-x: hidden;
+			position: absolute;
+			top: 100%;
+			left: 0; 
 		}
 	}
 </style>
